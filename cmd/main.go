@@ -5,12 +5,11 @@ import (
 	"sort"
 
 	"github.com/Valentin-Foucher/rss-feed-aggregator/pkg/rss"
-	"github.com/mmcdole/gofeed"
 )
 
-func sortItems(items []*gofeed.Item) {
+func sortItems(items []rss.IItem) {
 	sort.Slice(items, func(i, j int) bool {
-		return items[i].PublishedParsed.After(*items[j].PublishedParsed)
+		return items[i].ParsedPublishedDate().After(*items[j].ParsedPublishedDate())
 	})
 }
 
@@ -27,7 +26,7 @@ func fromFeeds(feedUrls []string) error {
 		itemsWindow := iter.Next()
 		for _, item := range itemsWindow {
 			if item != nil {
-				fmt.Println(item.Title)
+				fmt.Println(item.Title())
 			}
 		}
 	}

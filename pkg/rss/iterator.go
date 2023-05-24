@@ -1,17 +1,15 @@
 package rss
 
-import "github.com/mmcdole/gofeed"
-
 type IItemsIterator interface {
 	HasNext() bool
-	Next() []*gofeed.Item
+	Next() []IItem
 }
 
 type ItemsIterator struct {
 	index  int
 	window int
 
-	items []*gofeed.Item
+	items []IItem
 }
 
 func (i *ItemsIterator) HasNext() bool {
@@ -21,7 +19,7 @@ func (i *ItemsIterator) HasNext() bool {
 	return false
 
 }
-func (i *ItemsIterator) Next() []*gofeed.Item {
+func (i *ItemsIterator) Next() []IItem {
 	if i.HasNext() {
 		items := i.items[i.index : i.index+i.window]
 		i.index += i.window
@@ -30,7 +28,7 @@ func (i *ItemsIterator) Next() []*gofeed.Item {
 	return nil
 }
 
-func GetItemsIterator(items []*gofeed.Item) IItemsIterator {
+func GetItemsIterator(items []IItem) IItemsIterator {
 	return &ItemsIterator{
 		index:  0,
 		window: 5,
