@@ -4,59 +4,27 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/Valentin-Foucher/rss-feed-aggregator/pkg/rss"
 	"github.com/mmcdole/gofeed"
 )
 
-type ItemsIterator struct {
-	index  int
-	window int
-
-	items []*gofeed.Item
-}
-
-func (i *ItemsIterator) hasNext() bool {
-	if i.index < len(i.items) {
-		return true
-	}
-	return false
-
-}
-func (i *ItemsIterator) next() []*gofeed.Item {
-	if i.hasNext() {
-		items := i.items[i.index : i.index+i.window]
-		i.index += i.window
-		return items
-	}
-	return nil
-}
-
-func createItemsIterator(items []*gofeed.Item) IItemsIterator {
-	return &ItemsIterator{
-		index:  0,
-		window: 5,
-		items:  items,
-	}
-}
-
-func fromFeeds(feed_urls []string) error {
-	var items []*gofeed.Item
-	fp := gofeed.NewParser()
-
-	for _, url := range feed_urls {
-		feed, err := fp.ParseURL(url)
-		items = append(items, feed.Items...)
-		if err != nil {
-			return err
-		}
-	}
-
+func sortItems(items []*gofeed.Item) {
 	sort.Slice(items, func(i, j int) bool {
 		return items[i].PublishedParsed.After(*items[j].PublishedParsed)
 	})
+}
 
-	iter := createItemsIterator(items)
-	for iter.hasNext() {
-		itemsWindow := iter.next()
+func fromFeeds(feedUrls []string) error {
+	items, err := rss.GetItemsFromFeeds(feedUrls)
+	if err != nil {
+		return err
+	}
+
+	sortItems(items)
+
+	iter := rss.GetItemsIterator(items)
+	for iter.HasNext() {
+		itemsWindow := iter.Next()
 		for _, item := range itemsWindow {
 			if item != nil {
 				fmt.Println(item.Title)
