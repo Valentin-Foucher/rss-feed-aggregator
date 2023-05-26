@@ -28,10 +28,10 @@ func (i *ItemsIterator) Next() []IItem {
 	return nil
 }
 
-func GetItemsIterator(items []IItem) IItemsIterator {
+func (coll *ItemsCollection) CreateIterator() IItemsIterator {
 	return &ItemsIterator{
 		index:  0,
 		window: 5,
-		items:  items,
+		items:  coll.Items,
 	}
 }

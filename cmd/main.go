@@ -7,21 +7,23 @@ import (
 	"github.com/Valentin-Foucher/rss-feed-aggregator/pkg/rss"
 )
 
-func sortItems(items []rss.IItem) {
-	sort.Slice(items, func(i, j int) bool {
-		return items[i].ParsedPublishedDate().After(*items[j].ParsedPublishedDate())
+func sortItems(itemsCollection *rss.ItemsCollection) {
+	sort.Slice(itemsCollection.Items, func(i, j int) bool {
+		return itemsCollection.Items[i].ParsedPublishedDate().After(*itemsCollection.Items[j].ParsedPublishedDate())
 	})
 }
 
 func fromFeeds(feedUrls []string) error {
-	items, err := rss.GetItemsFromFeeds(feedUrls)
+	// aggregate
+	itemsCollection, err := rss.GetItemsFromFeeds(feedUrls)
 	if err != nil {
 		return err
 	}
 
-	sortItems(items)
+	// sort historically
+	sortItems(itemsCollection)
 
-	iter := rss.GetItemsIterator(items)
+	iter := itemsCollection.CreateIterator()
 	for iter.HasNext() {
 		itemsWindow := iter.Next()
 		for _, item := range itemsWindow {

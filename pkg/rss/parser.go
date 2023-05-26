@@ -6,21 +6,27 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-func GetItemsFromFeeds(feed_urls []string) ([]IItem, error) {
+type ItemsCollection struct {
+	Items []IItem
+}
+
+func GetItemsFromFeeds(feed_urls []string) (*ItemsCollection, error) {
 	var items []IItem
 	fp := gofeed.NewParser()
+	result := new(ItemsCollection)
 
 	for _, url := range feed_urls {
 		feed, err := fp.ParseURL(url)
 		for _, data := range feed.Items {
-			item := GetItem(data)
+			item := getItem(data)
 			items = append(items, item)
 		}
 		if err != nil {
 			return nil, err
 		}
 	}
-	return items, nil
+	result.Items = items
+	return result, nil
 }
 
 type IItem interface {
@@ -50,7 +56,7 @@ func (item *Item) ParsedPublishedDate() *time.Time {
 	return item.data.PublishedParsed
 }
 
-func GetItem(data *gofeed.Item) IItem {
+func getItem(data *gofeed.Item) IItem {
 	item := new(Item)
 	item.data = data
 	return item
