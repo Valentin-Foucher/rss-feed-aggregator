@@ -31,7 +31,7 @@ func GetItemsFromFeeds(feed_urls []string) (*ItemsCollection, error) {
 
 type IItem interface {
 	Title() string
-	Content() string
+	Description() string
 	PublishedDate() string
 	ParsedPublishedDate() *time.Time
 }
@@ -44,8 +44,8 @@ func (item *Item) Title() string {
 	return item.data.Title
 }
 
-func (item *Item) Content() string {
-	return item.data.Content
+func (item *Item) Description() string {
+	return item.data.Description
 }
 
 func (item *Item) PublishedDate() string {

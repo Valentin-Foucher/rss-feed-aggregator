@@ -10,7 +10,7 @@ func sortItems(itemsCollection *ItemsCollection) {
 	})
 }
 
-func FromFeeds(feedUrls []string) (IItemsIterator, error) {
+func GetItemsIteratorFromFeeds(feedUrls []string) (IItemsIterator, error) {
 	// aggregate
 	itemsCollection, err := GetItemsFromFeeds(feedUrls)
 	if err != nil {

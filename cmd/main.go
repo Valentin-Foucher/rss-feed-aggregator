@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	if iter, err := rss.FromFeeds([]string{"https://feeds.simplecast.com/54nAGcIl", "https://www.dailymail.co.uk/sciencetech/index.rss"}); err == nil {
+	if iter, err := rss.GetItemsIteratorFromFeeds([]string{"https://feeds.simplecast.com/54nAGcIl", "https://www.dailymail.co.uk/sciencetech/index.rss"}); err == nil {
 		for iter.HasNext() {
 			itemsWindow := iter.Next()
 			for _, item := range itemsWindow {

@@ -31,7 +31,7 @@ func (i *ItemsIterator) Next() []IItem {
 func (coll *ItemsCollection) CreateIterator() IItemsIterator {
 	return &ItemsIterator{
 		index:  0,
-		window: 5,
+		window: 10,
 		items:  coll.Items,
 	}
 }
