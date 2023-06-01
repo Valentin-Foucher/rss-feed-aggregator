@@ -16,7 +16,7 @@ func CardListLayout(gtx layout.Context, size image.Point, iterator rss.IItemsIte
 	list := layout.List{Axis: layout.Vertical, Alignment: layout.Middle}
 	list.Layout(gtx, len(items), func(gtx layout.Context, i int) layout.Dimensions {
 		item := items[i]
-		return layout.UniformInset(unit.Dp(30)).Layout(gtx, func(gtx layout.Context) layout.Dimensions {
+		return layout.UniformInset(unit.Dp(15)).Layout(gtx, func(gtx layout.Context) layout.Dimensions {
 			return Card(gtx, item.Title(), item.Description())
 		})
 	})

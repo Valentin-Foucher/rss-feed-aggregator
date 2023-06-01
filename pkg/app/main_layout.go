@@ -21,6 +21,7 @@ var (
 	green      = color.NRGBA{R: 0x40, G: 0xC0, B: 0x40, A: 0xFF}
 	blue       = color.NRGBA{R: 0x40, G: 0x40, B: 0xC0, A: 0xFF}
 	white      = color.NRGBA{R: 0xFF, G: 0xFF, B: 0xFF, A: 0xFF}
+	grey       = color.NRGBA{R: 0xDE, G: 0xDE, B: 0xDE, A: 0xFF}
 )
 
 func MainLayout(gtx layout.Context) layout.Dimensions {
