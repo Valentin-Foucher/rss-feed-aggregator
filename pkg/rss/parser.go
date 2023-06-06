@@ -34,6 +34,7 @@ type IItem interface {
 	Description() string
 	PublishedDate() string
 	ParsedPublishedDate() *time.Time
+	Link() string
 }
 
 type Item struct {
@@ -54,6 +55,10 @@ func (item *Item) PublishedDate() string {
 
 func (item *Item) ParsedPublishedDate() *time.Time {
 	return item.data.PublishedParsed
+}
+
+func (item *Item) Link() string {
+	return item.data.Link
 }
 
 func getItem(data *gofeed.Item) IItem {

@@ -6,6 +6,7 @@ require (
 	gioui.org v0.0.0-20230526230622-e3ef98dda382
 	github.com/fstanis/screenresolution v0.0.0-20190527020317-869904d15333
 	github.com/mmcdole/gofeed v1.2.1
+	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
 )
 
 require (
