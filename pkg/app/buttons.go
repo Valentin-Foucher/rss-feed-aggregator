@@ -2,32 +2,54 @@ package main
 
 import (
 	"image"
-	"image/color"
+	"log"
+	"os"
 
 	"gioui.org/io/pointer"
 	"gioui.org/layout"
 	"gioui.org/op"
 	"gioui.org/op/clip"
 	"gioui.org/op/paint"
+	"github.com/Valentin-Foucher/rss-feed-aggregator/pkg/rss"
 )
 
 type Button struct {
-	pressed bool
+	pressed  bool
+	iterator rss.IItemsIterator
+	items    []rss.IItem
 }
 
-func drawSquare(ops *op.Ops, color color.NRGBA) layout.Dimensions {
-	defer clip.Rect{Max: image.Pt(100, 100)}.Push(ops).Pop()
-	paint.ColorOp{Color: color}.Add(ops)
+func drawArrow(ops *op.Ops) layout.Dimensions {
+	defer clip.Rect{Max: image.Pt(32, 32)}.Push(ops).Pop()
+	arrow, err := os.Open("assets/images/right-arrow.png")
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+
+	defer arrow.Close()
+	arrowData, _, err := image.Decode(arrow)
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+
+	imageOp := paint.NewImageOp(arrowData)
+	imageOp.Add(ops)
 	paint.PaintOp{}.Add(ops)
-	return layout.Dimensions{Size: image.Pt(100, 100)}
+	return layout.Dimensions{Size: imageOp.Size()}
 }
 func (b *Button) Layout(gtx layout.Context) layout.Dimensions {
-	// here we loop through all the events associated with this button.
-	for _, e := range gtx.Events(b) {
+	arrow := drawArrow(gtx.Ops)
+
+	for _, e := range gtx.Events(arrow) {
 		if e, ok := e.(pointer.Event); ok {
 			switch e.Type {
 			case pointer.Press:
-				b.pressed = true
+				if !b.pressed {
+					b.items = b.iterator.Next()
+					b.pressed = true
+				}
 			case pointer.Release:
 				b.pressed = false
 			}
@@ -35,18 +57,12 @@ func (b *Button) Layout(gtx layout.Context) layout.Dimensions {
 	}
 
 	// Confine the area for pointer events.
-	area := clip.Rect(image.Rect(0, 0, 100, 100)).Push(gtx.Ops)
+	area := clip.Rect(image.Rect(0, 0, arrow.Size.X, arrow.Size.Y)).Push(gtx.Ops)
 	pointer.InputOp{
-		Tag:   b,
+		Tag:   arrow,
 		Types: pointer.Press | pointer.Release,
-		Grab:  true,
 	}.Add(gtx.Ops)
 	area.Pop()
 
-	// Draw the button.
-	col := color.NRGBA{R: 0x80, A: 0xFF}
-	if b.pressed {
-		col = color.NRGBA{G: 0x80, A: 0xFF}
-	}
-	return drawSquare(gtx.Ops, col)
+	return arrow
 }

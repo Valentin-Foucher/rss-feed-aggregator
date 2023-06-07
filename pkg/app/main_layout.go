@@ -20,23 +20,16 @@ var (
 	grey       = color.NRGBA{R: 0xDE, G: 0xDE, B: 0xDE, A: 0xFF}
 )
 
-func MainLayout(gtx layout.Context) layout.Dimensions {
-	iter, err := rss.GetItemsIteratorFromFeeds([]string{"https://feeds.simplecast.com/54nAGcIl", "https://www.dailymail.co.uk/sciencetech/index.rss"})
-	if err != nil {
-		log.Fatal(err)
-		os.Exit(1)
-	}
-
+func MainLayout(gtx layout.Context, button *Button) layout.Dimensions {
 	return layout.Stack{Alignment: layout.S}.Layout(gtx,
 		layout.Expanded(func(gtx layout.Context) layout.Dimensions {
 			return Background(gtx, red)
 		}),
 		layout.Stacked(func(gtx layout.Context) layout.Dimensions {
-			return CardListLayout(gtx, iter)
+			return button.Layout(gtx)
 		}),
 		layout.Stacked(func(gtx layout.Context) layout.Dimensions {
-			b := new(Button)
-			return b.Layout(gtx)
+			return CardListLayout(gtx, button.items)
 		}),
 	)
 }
@@ -55,6 +48,16 @@ func main() {
 
 func run(w *app.Window) error {
 	var ops op.Ops
+	iter, err := rss.GetItemsIteratorFromFeeds([]string{"https://feeds.simplecast.com/54nAGcIl", "https://www.dailymail.co.uk/sciencetech/index.rss"})
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+
+	button := new(Button)
+	button.iterator = iter
+	button.items = button.iterator.Next()
+
 	for {
 		e := <-w.Events()
 		switch e := e.(type) {
@@ -63,7 +66,7 @@ func run(w *app.Window) error {
 		case system.FrameEvent:
 			gtx := layout.NewContext(&ops, e)
 
-			MainLayout(gtx)
+			MainLayout(gtx, button)
 			e.Frame(gtx.Ops)
 		}
 	}
