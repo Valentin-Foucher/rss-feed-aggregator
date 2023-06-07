@@ -9,6 +9,7 @@ import (
 	"gioui.org/io/system"
 	"gioui.org/layout"
 	"gioui.org/op"
+	"gioui.org/unit"
 	"github.com/Valentin-Foucher/rss-feed-aggregator/pkg/rss"
 )
 
@@ -20,16 +21,24 @@ var (
 	grey       = color.NRGBA{R: 0xDE, G: 0xDE, B: 0xDE, A: 0xFF}
 )
 
-func MainLayout(gtx layout.Context, button *Button) layout.Dimensions {
+func MainLayout(gtx layout.Context, paginator *Paginator) layout.Dimensions {
 	return layout.Stack{Alignment: layout.S}.Layout(gtx,
 		layout.Expanded(func(gtx layout.Context) layout.Dimensions {
 			return Background(gtx, red)
 		}),
 		layout.Stacked(func(gtx layout.Context) layout.Dimensions {
-			return button.Layout(gtx)
+			return CardListLayout(gtx, paginator.items)
 		}),
 		layout.Stacked(func(gtx layout.Context) layout.Dimensions {
-			return CardListLayout(gtx, button.items)
+			return layout.Flex{Axis: layout.Horizontal}.Layout(gtx,
+				layout.Flexed(0.5, func(gtx layout.Context) layout.Dimensions {
+					return drawBackButton(gtx, paginator)
+				}),
+				layout.Rigid(layout.Spacer{Width: unit.Dp(20)}.Layout),
+				layout.Flexed(0.5, func(gtx layout.Context) layout.Dimensions {
+					return drawForwardButton(gtx, paginator)
+				}),
+			)
 		}),
 	)
 }
@@ -54,9 +63,11 @@ func run(w *app.Window) error {
 		os.Exit(1)
 	}
 
-	button := new(Button)
-	button.iterator = iter
-	button.items = button.iterator.Next()
+	paginator := new(Paginator)
+	paginator.iterator = iter
+	paginator.left = Button{pressed: false}
+	paginator.right = Button{pressed: false}
+	paginator.items = iter.Next()
 
 	for {
 		e := <-w.Events()
@@ -66,7 +77,7 @@ func run(w *app.Window) error {
 		case system.FrameEvent:
 			gtx := layout.NewContext(&ops, e)
 
-			MainLayout(gtx, button)
+			MainLayout(gtx, paginator)
 			e.Frame(gtx.Ops)
 		}
 	}

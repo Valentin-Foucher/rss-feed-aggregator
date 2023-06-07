@@ -17,12 +17,12 @@ func CardListLayout(gtx layout.Context, items []rss.IItem) layout.Dimensions {
 	for _, e := range gtx.Events(0) {
 		if e, ok := e.(key.Event); ok && e.State == key.Press {
 			if e.Name == "U" {
-				scrollOffset = scrollOffset - 50
+				scrollOffset = scrollOffset - 100
 				if scrollOffset < 0 {
 					scrollOffset = 0
 				}
 			} else if e.Name == "D" {
-				scrollOffset = scrollOffset + 50
+				scrollOffset = scrollOffset + 100
 				if scrollOffset < 0 {
 					scrollOffset = 0
 				}
@@ -52,14 +52,6 @@ func CardListLayout(gtx layout.Context, items []rss.IItem) layout.Dimensions {
 			})
 		})
 	})
-
-	// articles := layout.Inset{Left: unit.Dp(15), Top: unit.Dp(15), Right: unit.Dp(15), Bottom: unit.Dp(150)}.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
-	// 	.Layout(gtx, len(items), func(gtx layout.Context, i int) layout.Dimensions {
-	// 	item := items[i]
-	// 	return layout.UniformInset(unit.Dp(15)).Layout(gtx, func(gtx layout.Context) layout.Dimensions {
-	// 		return Card(gtx, item.Title(), item.Description(), item.Link())
-	// 	})
-	// })
 
 	eventArea.Pop()
 
