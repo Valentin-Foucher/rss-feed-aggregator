@@ -9,7 +9,12 @@ import (
 	"gioui.org/op/paint"
 )
 
-func Background(gtx layout.Context, color color.NRGBA) layout.Dimensions {
+var (
+	red  = color.NRGBA{R: 0xC0, G: 0x40, B: 0x40, A: 0xFF}
+	blue = color.NRGBA{R: 0x40, G: 0x40, B: 0xC0, A: 0xFF}
+)
+
+func Background(gtx layout.Context) layout.Dimensions {
 	size := gtx.Constraints.Max
 
 	defer clip.Rect{Max: size}.Push(gtx.Ops).Pop()

@@ -116,3 +116,12 @@ func drawBackButton(gtx layout.Context, paginator *Paginator) layout.Dimensions 
 
 	return arrow
 }
+
+func newPaginator(iter rss.IItemsIterator) *Paginator {
+	paginator := new(Paginator)
+	paginator.iterator = iter
+	paginator.left = Button{pressed: false}
+	paginator.right = Button{pressed: false}
+	paginator.items = iter.Next()
+	return paginator
+}

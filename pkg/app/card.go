@@ -2,6 +2,7 @@ package main
 
 import (
 	"image"
+	"image/color"
 
 	"gioui.org/font"
 	"gioui.org/font/gofont"
@@ -20,6 +21,7 @@ var (
 	th               = material.NewTheme(gofont.Collection())
 	screenResolution = screenresolution.GetPrimary()
 	isHovering       = false
+	grey             = color.NRGBA{R: 0xDE, G: 0xDE, B: 0xDE, A: 0xFF}
 )
 
 func cardBackground(gtx layout.Context) layout.Dimensions {
