@@ -10,19 +10,21 @@ type ItemsCollection struct {
 	Items []IItem
 }
 
-func GetItemsFromFeeds(feed_urls []string) (*ItemsCollection, error) {
+func GetItemsFromFeeds(rssFeeds map[string][]string) (*ItemsCollection, error) {
 	var items []IItem
 	fp := gofeed.NewParser()
 	result := new(ItemsCollection)
 
-	for _, url := range feed_urls {
-		feed, err := fp.ParseURL(url)
-		for _, data := range feed.Items {
-			item := getItem(data)
-			items = append(items, item)
-		}
-		if err != nil {
-			return nil, err
+	for source, urls := range rssFeeds {
+		for _, url := range urls {
+			feed, err := fp.ParseURL(url)
+			for _, data := range feed.Items {
+				item := getItem(data, source)
+				items = append(items, item)
+			}
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	result.Items = items
@@ -35,10 +37,12 @@ type IItem interface {
 	PublishedDate() string
 	ParsedPublishedDate() *time.Time
 	Link() string
+	Source() string
 }
 
 type Item struct {
-	data *gofeed.Item
+	data   *gofeed.Item
+	source string
 }
 
 func (item *Item) Title() string {
@@ -61,8 +65,13 @@ func (item *Item) Link() string {
 	return item.data.Link
 }
 
-func getItem(data *gofeed.Item) IItem {
+func (item *Item) Source() string {
+	return item.source
+}
+
+func getItem(data *gofeed.Item, source string) IItem {
 	item := new(Item)
 	item.data = data
+	item.source = source
 	return item
 }

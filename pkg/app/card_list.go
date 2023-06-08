@@ -47,8 +47,8 @@ func CardListLayout(gtx layout.Context, items []rss.IItem) layout.Dimensions {
 	articles := layout.Inset{Bottom: unit.Dp(40)}.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
 		return list.Layout(gtx, len(items), func(gtx layout.Context, i int) layout.Dimensions {
 			item := items[i]
-			return layout.UniformInset(unit.Dp(15)).Layout(gtx, func(gtx layout.Context) layout.Dimensions {
-				return Card(gtx, item.Title(), item.Description(), item.Link())
+			return layout.Inset{Top: unit.Dp(15), Right: unit.Dp(15), Bottom: unit.Dp(35), Left: unit.Dp(15)}.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
+				return Card(gtx, item)
 			})
 		})
 	})

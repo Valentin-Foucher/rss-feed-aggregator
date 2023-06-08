@@ -10,9 +10,9 @@ func sortItems(itemsCollection *ItemsCollection) {
 	})
 }
 
-func GetItemsIteratorFromFeeds(feedUrls []string) (IItemsIterator, error) {
+func GetItemsIteratorFromFeeds(rssFeeds map[string][]string) (IItemsIterator, error) {
 	// aggregate
-	itemsCollection, err := GetItemsFromFeeds(feedUrls)
+	itemsCollection, err := GetItemsFromFeeds(rssFeeds)
 	if err != nil {
 		return nil, err
 	}

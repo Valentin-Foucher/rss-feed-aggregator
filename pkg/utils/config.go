@@ -8,7 +8,7 @@ import (
 )
 
 type Configuration struct {
-	RssFeeds []string `yaml:"rss_feeds"`
+	RssFeeds map[string][]string `yaml:"rss_feeds"`
 }
 
 func processError(err error) {
