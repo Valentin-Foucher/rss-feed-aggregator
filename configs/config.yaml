@@ -1,0 +1,12 @@
+rss_feeds:
+  - https://www.france24.com/fr/rss
+  - https://www.france24.com/fr/france/rss
+  - https://www.20minutes.fr/feeds/rss-une.xml
+  - https://www.afp.com/fr/actus/afp_actualite/792,31,9,7,33/feed
+  - https://www.lemonde.fr/rss/une.xml
+  - https://www.ouest-france.fr/rss/une
+  - https://www.lemondeinformatique.fr/flux-rss/thematique/internet/rss.xml
+  - https://www.lemondeinformatique.fr/flux-rss/thematique/logiciel/rss.xml
+  - https://www.lemondeinformatique.fr/flux-rss/thematique/securite/rss.xml
+  - https://www.bfmtv.com/rss/news-24-7/
+  - https://www.journaldugeek.com/feed/

@@ -9,6 +9,7 @@ import (
 	"gioui.org/layout"
 	"gioui.org/op"
 	"github.com/Valentin-Foucher/rss-feed-aggregator/pkg/rss"
+	"github.com/Valentin-Foucher/rss-feed-aggregator/pkg/utils"
 )
 
 func main() {
@@ -25,7 +26,11 @@ func main() {
 
 func run(w *app.Window) error {
 	var ops op.Ops
-	iter, err := rss.GetItemsIteratorFromFeeds([]string{"https://feeds.simplecast.com/54nAGcIl", "https://www.dailymail.co.uk/sciencetech/index.rss"})
+
+	var cfg utils.Configuration
+	utils.ReadConfiguration(&cfg)
+
+	iter, err := rss.GetItemsIteratorFromFeeds(cfg.RssFeeds)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
